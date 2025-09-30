@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在宅医療費用シミュレーター | 新生病院</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="container">
+            <h1 class="header-title">
+                <i class="fas fa-calculator"></i>
+                在宅医療費用シミュレーター
+            </h1>
+            <p class="header-subtitle">特定医療法人　新生病院</p>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="main">
+        <div class="container">
+            <!-- 説明セクション -->
+            <section class="intro">
+                <h2><i class="fas fa-info-circle"></i> シミュレーターについて</h2>
+                <p>このシミュレーターは、在宅医療（訪問診療）にかかる月額費用の目安を計算するツールです。<br>
+                各種条件を入力していただくと、おおよその月額利用料金が表示されます。</p>
+                <div class="notice">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>ご注意：</strong>実際の料金は個別の診療内容や保険適用状況により変動する場合があります。詳細はお問い合わせください。
+                </div>
+            </section>
+
+            <!-- 入力フォーム -->
+            <section class="form-section">
+                <h2><i class="fas fa-edit"></i> 条件入力</h2>
+                <form id="simulationForm" class="simulation-form">
+                    <div class="form-grid">
+                        <!-- 基本情報 -->
+                        <div class="form-group">
+                            <label for="patientType">患者タイプ <span class="required">*</span></label>
+                            <select id="patientType" name="patientType" required>
+                                <option value="">選択してください</option>
+                                <option value="在がん">在宅がん医療総合診療料</option>
+                                <option value="在総管1">在総管1（同一日訪問患者数1名）</option>
+                                <option value="在総管2-9">在総管2-9（同一日訪問患者数2-9名）</option>
+                                <option value="在総管10-19">在総管10-19（同一日訪問患者数10-19名）</option>
+                                <option value="施設総管1">施設総管1（同一日訪問患者数1名）</option>
+                                <option value="施設総管2-9">施設総管2-9（同一日訪問患者数2-9名）</option>
+                                <option value="施設総管10-19">施設総管10-19（同一日訪問患者数10-19名）</option>
+                            </select>
+                        </div>
+
+                        <!-- 重症度 -->
+                        <div class="form-group">
+                            <label for="severity">重症度 <span class="required">*</span></label>
+                            <select id="severity" name="severity" required>
+                                <option value="">選択してください</option>
+                                <option value="重症度あり">重症度あり</option>
+                                <option value="重症度なし">重症度なし</option>
+                            </select>
+                        </div>
+
+                        <!-- 処方せん交付（在宅がん医療総合診療料のみ） -->
+                        <div class="form-group" id="prescriptionGroup" style="display: none;">
+                            <label for="prescription">処方せん交付 <span class="required">*</span></label>
+                            <select id="prescription" name="prescription">
+                                <option value="">選択してください</option>
+                                <option value="あり">処方せん交付あり</option>
+                                <option value="なし">処方せん交付なし</option>
+                            </select>
+                            <small class="form-note">※在宅がん医療総合診療料算定時のみ</small>
+                        </div>
+
+
+
+                        <!-- 医療保険負担割合 -->
+                        <div class="form-group">
+                            <label for="insuranceRate">医療保険負担割合 <span class="required">*</span></label>
+                            <select id="insuranceRate" name="insuranceRate" required>
+                                <option value="">選択してください</option>
+                                <option value="10">1割負担</option>
+                                <option value="20">2割負担</option>
+                                <option value="30">3割負担</option>
+                            </select>
+                        </div>
+
+                        <!-- 介護保険サービス利用 -->
+                        <div class="form-group">
+                            <label for="nursingService">介護保険サービス利用 <span class="required">*</span></label>
+                            <select id="nursingService" name="nursingService" required>
+                                <option value="">選択してください</option>
+                                <option value="あり">あり</option>
+                                <option value="なし">なし</option>
+                            </select>
+                            <small class="form-note">※居宅療養管理指導の算定には介護保険サービス利用が必要です</small>
+                        </div>
+
+                        <!-- 介護保険負担割合 -->
+                        <div class="form-group">
+                            <label for="nursingRate">介護保険負担割合 <span class="required">*</span></label>
+                            <select id="nursingRate" name="nursingRate" required>
+                                <option value="">選択してください</option>
+                                <option value="10">1割負担</option>
+                                <option value="20">2割負担</option>
+                                <option value="30">3割負担</option>
+                            </select>
+                        </div>
+
+                        <!-- 所得水準（高額療養費制度対応） -->
+                        <div class="form-group">
+                            <label for="incomeLevel">所得水準（高額療養費制度） <span class="required">*</span></label>
+                            <select id="incomeLevel" name="incomeLevel" required>
+                                <option value="">選択してください</option>
+                                <optgroup label="69歳以下">
+                                    <option value="年収約1,160万円～">年収約1,160万円～（区分ア）</option>
+                                    <option value="年収約770～1,160万円">年収約770～1,160万円（区分イ）</option>
+                                    <option value="年収約370～770万円">年収約370～770万円（区分ウ）</option>
+                                    <option value="年収～370万円">年収～370万円（区分エ）</option>
+                                    <option value="住民税非課税">住民税非課税（区分オ）</option>
+                                </optgroup>
+                                <optgroup label="70-74歳">
+                                    <option value="70-74歳_現役並み所得Ⅲ">現役並み所得Ⅲ（課税所得690万円以上）</option>
+                                    <option value="70-74歳_現役並み所得Ⅱ">現役並み所得Ⅱ（課税所得380万円以上）</option>
+                                    <option value="70-74歳_現役並み所得Ⅰ">現役並み所得Ⅰ（課税所得145万円以上）</option>
+                                    <option value="70-74歳_一般">一般（課税所得145万円未満）</option>
+                                    <option value="70-74歳_低所得Ⅱ">低所得Ⅱ（住民税非課税）</option>
+                                    <option value="70-74歳_低所得Ⅰ">低所得Ⅰ（住民税非課税・年金収入80万円以下）</option>
+                                </optgroup>
+                                <optgroup label="75歳以上">
+                                    <option value="75歳～_現役並み所得Ⅲ">現役並み所得Ⅲ（課税所得690万円以上）</option>
+                                    <option value="75歳～_現役並み所得Ⅱ">現役並み所得Ⅱ（課税所得380万円以上）</option>
+                                    <option value="75歳～_現役並み所得Ⅰ">現役並み所得Ⅰ（課税所得145万円以上）</option>
+                                    <option value="75歳～_一般">一般（課税所得145万円未満）</option>
+                                    <option value="75歳～_低所得Ⅱ">低所得Ⅱ（住民税非課税）</option>
+                                    <option value="75歳～_低所得Ⅰ">低所得Ⅰ（住民税非課税・年金収入80万円以下）</option>
+                                </optgroup>
+                            </select>
+                            <small class="form-note">※高額療養費の自己負担上限額算出に使用されます</small>
+                        </div>
+
+                        <!-- 距離 -->
+                        <div class="form-group">
+                            <label for="distance">病院からの直線距離 <span class="required">*</span></label>
+                            <div class="input-with-unit">
+                                <input type="number" id="distance" name="distance" min="0" step="0.1" required>
+                                <span class="unit">km</span>
+                            </div>
+                        </div>
+
+
+
+                        <!-- 月間訪問日数 -->
+                        <div class="form-group">
+                            <label for="monthlyVisits">月間訪問日数 <span class="required">*</span></label>
+                            <select id="monthlyVisits" name="monthlyVisits" required>
+                                <option value="">選択してください</option>
+                                <option value="1">1日</option>
+                                <option value="2">2日</option>
+                                <option value="3">3日</option>
+                                <option value="4">4日</option>
+                                <option value="5">5日</option>
+                                <option value="6">6日</option>
+                                <option value="7">7日</option>
+                                <option value="8">8日</option>
+                                <option value="9">9日</option>
+                                <option value="10">10日</option>
+                                <option value="11">11日</option>
+                                <option value="12">12日</option>
+                                <option value="13">13日</option>
+                                <option value="14">14日</option>
+                                <option value="15">15日以上</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 特別条件 -->
+                    <div class="special-conditions">
+                        <h3>特別条件</h3>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="welfareSubsidy" name="welfareSubsidy">
+                                <span class="checkmark"></span>
+                                福祉医療費受給者
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="rareDisease" name="rareDisease">
+                                <span class="checkmark"></span>
+                                難病指定
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 計算ボタン -->
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-calculator"></i>
+                            料金を計算する
+                        </button>
+                        <button type="reset" class="btn btn-secondary">
+                            <i class="fas fa-redo"></i>
+                            リセット
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- 結果表示エリア -->
+            <section id="resultSection" class="result-section" style="display: none;">
+                <h2><i class="fas fa-chart-line"></i> 計算結果</h2>
+                <div class="result-card">
+                    <div class="result-header">
+                        <h3>月額利用料金</h3>
+                        <div class="result-amount" id="totalAmount">
+                            ¥ <span>0</span>
+                        </div>
+                    </div>
+                    <div class="result-breakdown" id="breakdown">
+                        <!-- 計算内訳がここに表示されます -->
+                    </div>
+                    <div class="result-notice">
+                        <i class="fas fa-info-circle"></i>
+                        この料金は概算です。実際の料金は診療内容により変動する場合があります。
+                    </div>
+                </div>
+            </section>
+
+            <!-- お問い合わせ -->
+            <section class="contact-section">
+                <h2><i class="fas fa-phone"></i> お問い合わせ</h2>
+                <p>詳細な料金や在宅医療についてのご相談は、お気軽にお問い合わせください。</p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-hospital"></i>
+                        <strong>特定医療法人　新生病院</strong>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>お電話でのお問い合わせ</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>受付時間：平日 9:00-17:00</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 特定医療法人　新生病院. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Loading spinner -->
+    <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+        <p>計算中...</p>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
